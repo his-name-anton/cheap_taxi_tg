@@ -29,8 +29,8 @@ async def open_browser() -> webdriver.Chrome:
     chrome_options.add_argument(f"--proxy-server='direct://'")  # отключает прокси-сервер
     chrome_options.add_argument(
         f"--proxy-bypass-list=*")  # настраивает список сайтов, для которых не нужно использовать прокси-сервер
-    # chrome_options.add_argument(f"--headless")
-    # chrome_options.add_argument(f"--disable-gpu")  # отключает использование GPU для рендеринга страницы.
+    chrome_options.add_argument(f"--headless")
+    chrome_options.add_argument(f"--disable-gpu")  # отключает использование GPU для рендеринга страницы.
     chrome_options.add_argument('--blink-settings=imagesEnabled=false')
     chrome_options.add_argument('--disable-javascript')
     chrome_options.add_argument(f"--disable-extensions")  # отключаем расширения
