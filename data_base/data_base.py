@@ -18,7 +18,7 @@ DB_COLUMNS = {
 
 class DataBase:
     def __init__(self):
-        self.connection = sqlite3.connect('/Users/antonlarin/python_projects/cheap_taxi_server/data_base/cheap_taxi_db.db')
+        self.connection = sqlite3.connect('data_base/cheap_taxi_db.db')
         self.cursor = self.connection.cursor()
 
     def insert_row(self, table: str, values: tuple) -> str:
