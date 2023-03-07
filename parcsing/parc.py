@@ -49,8 +49,9 @@ async def load_url_and_cookies(driver: webdriver.Chrome):
     cookies = get_cookies_values(PATH_COOKIES_FILE)
     for i in cookies:
         driver.add_cookie(i)
-    await asyncio.sleep(1)
+    await asyncio.sleep(.1)
     driver.refresh()
+    await asyncio.sleep(5)
 
 
 async def create_order(driver: webdriver.Chrome):
