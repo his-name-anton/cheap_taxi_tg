@@ -14,10 +14,8 @@ headers = {
     'content-type': 'application/json',
     'referer': 'https://taxi.yandex.ru/',
     'cookie': data_headers.get('cookie'),
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/111.0.0.0 Safari/537.36',
-    'x-taxi': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
-              'Chrome/111.0.0.0 Safari/537.36 turboapp_taxi',
+    'user-agent':  data_headers.get('user_agent'),
+    'x-taxi': data_headers.get('x_taxi'),
     'x-csrf-token': data_headers.get('csrf_token'),
     'x-request-id': data_headers.get('x_request_id'),
     'x-yataxi-userid': data_headers.get('x_yataxi_userid'),

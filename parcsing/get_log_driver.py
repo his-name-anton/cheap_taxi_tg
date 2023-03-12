@@ -64,9 +64,12 @@ def get_data_headers(driver: webdriver.Chrome):
         'cookie': None,
         'csrf_token': None,
         'x_request_id': None,
-        'x_yataxi_userid': None
+        'x_yataxi_userid': None,
+        'user_agent': None,
+        'x_taxi': None
     }
     log_str = "\n".join([entry['message'] for entry in log_entries])
+
 
     m_cookie = re.search(r'"Cookie":"([^"]*yandex_login=akkayntnomer3;[^"]*)"', log_str)
     if m_cookie:
@@ -87,6 +90,16 @@ def get_data_headers(driver: webdriver.Chrome):
     if match:
         x_yataxi_userid = match.group(1)
         headers_data['x_yataxi_userid'] = x_yataxi_userid
+
+    match = re.search(r'"X-Taxi":"([^"]+)"', log_str)
+    if match:
+        x_taxi = match.group(1)
+        headers_data['x_taxi'] = x_taxi
+
+    match = re.search(r'"User-Agent":"([^"]+)"', log_str)
+    if match:
+        user_agent = match.group(1)
+        headers_data['user_agent'] = user_agent
 
     return headers_data
 
