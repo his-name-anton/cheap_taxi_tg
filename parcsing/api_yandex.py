@@ -1,15 +1,15 @@
 import re
+import aiohttp
+import os
+
 from pprint import pprint
 from typing import List
-
-import aiohttp
-
+from dotenv import load_dotenv, find_dotenv
 from data_base.data_base import db
 from parcsing.get_log_driver import get_new_token, driver, data_headers
 
-offers_price = {}
+load_dotenv(find_dotenv())
 
-yataxi_user_id = 'd4e0799ea1c84e4d9f334bb4167d6c17'
 headers = {
     'content-type': 'application/json',
     'referer': 'https://taxi.yandex.ru/',
@@ -45,7 +45,7 @@ async def get_price_yandex(route: List[List[float]], cant_none=False) -> str:
         "selected_class": "",
         "format_currency": True,
         "requirements": {"coupon": ""},
-        "payment": {"type": "card", "payment_method_id": "card-x2c8b38222aa54a2147d1f03d"},
+        "payment": {"type": "card", "payment_method_id": os.getenv('CARD_YANDEX')},
         "id": data_headers.get('x_yataxi_userid'),
         "summary_version": 2,
         "is_lightweight": False,
@@ -90,7 +90,7 @@ async def get_orderid(offer: str,
 
     """
     url = 'https://ya-authproxy.taxi.yandex.ru/external/3.0/orderdraft'
-    payment_method_id = 'card-x2c8b38222aa54a2147d1f03d' if payment_type == "card" else "cash"
+    payment_method_id = os.getenv('CARD_YANDEX') if payment_type == "card" else "cash"
 
     route = []
     for loc in addresses_locs:
