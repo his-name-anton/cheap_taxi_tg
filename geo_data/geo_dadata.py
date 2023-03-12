@@ -1,4 +1,6 @@
 import os
+from pprint import pprint
+
 from dotenv import load_dotenv, find_dotenv
 from dadata import Dadata
 
@@ -11,11 +13,16 @@ def get_address_by_coord(lat: float, lon: float) -> dict[str: str]:
     all_data = dadata.geolocate(name="address", lat=lat, lon=lon)
     first_el = all_data[0]
     res_d = {
-        'value': first_el.get('value'),
+        # 'value': first_el.get('value'),
         'region': first_el.get('data').get('region'),
         'city': first_el.get('data').get('city'),
-        'street_with_type': first_el.get('data').get('street_with_type'),
+        'street': first_el.get('data').get('street_with_type'),
         'house': first_el.get('data').get('house'),
+        'full_address': first_el.get('data').get('result'),
+        'timezone': first_el.get('data').get('timezone'),
+        'geo_lat': lat,
+        'geo_lon': lon,
+        'postal_code': first_el.get('data').get('postal_code')
     }
     return res_d
 

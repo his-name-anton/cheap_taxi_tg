@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardButton, InlineQueryResultLocation
+from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
@@ -36,66 +36,59 @@ def make_inline_menu_board_by_2_items(items: dict[str: str]) -> InlineKeyboardBu
     return board.as_markup()
 
 
-def make_inline_menu_board(items: dict[str: str]) -> InlineKeyboardBuilder:
-    buttons = []
-    row = []
-
-    for key, value in items.items():
-        row.append(InlineKeyboardButton(
-            text=value[0],
-            callback_data=key
-        ))
-        if len(row) == 2:
+def make_inline_menu_board(items: dict[str: str], long_f=False) -> InlineKeyboardBuilder:
+    if long_f:
+        board = InlineKeyboardBuilder()
+        for key, value in items.items():
+            board.row(InlineKeyboardButton(
+                text=value[0],
+                callback_data=key
+            ))
+    else:
+        buttons = []
+        row = []
+        for key, value in items.items():
+            row.append(InlineKeyboardButton(
+                text=value[0],
+                callback_data=key
+            ))
+            if len(row) == 2:
+                buttons.append(row)
+                row = []
+        if len(row) == 1:
             buttons.append(row)
-            row = []
-    if len(row) == 1:
-        buttons.append(row)
-    board = InlineKeyboardBuilder(buttons)
+        board = InlineKeyboardBuilder(buttons)
     return board.as_markup()
 
 
-def make_fast_mode_running_board(best_price: int = None) -> InlineKeyboardBuilder:
+def make_fast_mode_running_board(best_price: int = None,
+                                 price_now=None,
+                                 route_yandex=None) -> InlineKeyboardBuilder:
     board = InlineKeyboardBuilder()
-    board.add(InlineKeyboardButton(text='⛔Отменить', callback_data='cancel_fast_mode'))
-    if best_price is not None:
-        board.add(InlineKeyboardButton(text=f'🚕Заказать \n{best_price}р', callback_data='create_order_taxi'))
+    board.row(InlineKeyboardButton(text='⛔Отменить поиск', callback_data='cancel_fast_mode'))
+    if route_yandex:
+        start = route_yandex[0]
+        end = route_yandex[-1]
+        url = f"https://3.redirect.appmetrica.yandex.com/route?start-lat={start[1]}&start-lon={start[0]}&end-lat={end[1]}&end-lon={end[0]}&ref=cab_hound&appmetrica_tracking_id=1178268795219780156"
+        board.row(InlineKeyboardButton(text=f'🚕Заказать в Яндекс {price_now}₽', url=url))
+    if best_price is not None and (price_now - best_price > 5):
+        board.row(InlineKeyboardButton(text=f'💰Заказать лучшую цену {best_price}₽', callback_data='create_order_taxi'))
     return board.as_markup()
 
 
 def make_address_keyboard_menu(items: dict[str: str],
                                exceptions: list = [],
                                can_order: bool = False) -> InlineKeyboardBuilder:
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text=FAVORITE_ADDRESS['-1'][0],
-                callback_data='-1'
-            ),
-            InlineKeyboardButton(
-                text=FAVORITE_ADDRESS['-2'][0],
-                callback_data='-2'
-            )
-        ]
-    ]
-    row = []
+    board = InlineKeyboardBuilder()
     for i, (key, value) in enumerate(items.items()):
         if value in exceptions:
             continue
-        row.append(InlineKeyboardButton(
-            text=value,
+        if i > 4:
+            break
+        board.row(InlineKeyboardButton(
+            text=value[1],
             callback_data=key
         ))
-        if len(row) == 2:
-            buttons.append(row)
-            row = []
-
-    if len(row) == 1:
-        buttons.append(row)
-    try:
-        buttons = buttons[:3]
-    except:
-        pass
-    board = InlineKeyboardBuilder(buttons)
     board.row(InlineKeyboardButton(
         text='⏪ В меню',
         callback_data='cancel_create_trip'
@@ -111,6 +104,14 @@ def make_address_keyboard_menu(items: dict[str: str],
 share_phone_keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="Поделиться номером", request_contact=True)]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
+share_geo_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="Поделиться геолокацией", request_location=True)]
         ],
         resize_keyboard=True,
         one_time_keyboard=True

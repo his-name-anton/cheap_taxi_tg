@@ -26,16 +26,46 @@ conn.execute('''CREATE TABLE IF NOT EXISTS user_settings (
 conn.execute('''CREATE TABLE IF NOT EXISTS user_addresses (
     id INTEGER PRIMARY KEY,
     chat_id INTEGER REFERENCES users(chat_id) ON DELETE CASCADE,
-    region VARCHAR(100),
+    country varchar(100),
+    area VARCHAR(100),
     city VARCHAR(100),
     street VARCHAR(100),
     house VARCHAR(50),
     full_address VARCHAR(200),
-    timezone VARCHAR(50),
-    geo_lat VARCHAR(20),
-    geo_lon VARCHAR(20),
-    postal_code VARCHAR(50),
-    created TIMESTAMP WITH TIME ZONE DEFAULT (strftime('%s', 'now'))
+    short_address VARCHAR(100),
+    lat FLOAT(12, 8),
+    lon FLOAT(12, 8),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);''')
+
+conn.execute('''CREATE TABLE IF NOT EXISTS csrf_tokens (
+    id INTEGER PRIMARY KEY,
+    token VARCHAR(250),
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);''')
+
+
+conn.execute('''CREATE TABLE IF NOT EXISTS session_fast_mode (
+    id INTEGER PRIMARY KEY,
+    chat_id INTEGER REFERENCES users(chat_id) ON DELETE CASCADE,
+    address_1 varchar(100),
+    address_2 varchar(100),
+    address_3 varchar(100),
+    address_4 varchar(100),
+    result varchar(50),
+    offer_used VARCHAR(250) REFERENCES offers_taxi(offer) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    closed TIMESTAMP
+);''')
+
+
+conn.execute('''CREATE TABLE IF NOT EXISTS offers_taxi (
+    id INTEGER PRIMARY KEY,
+    chat_id INTEGER REFERENCES users(chat_id) ON DELETE CASCADE,
+    session_id INTEGER REFERENCES session_fast_mode(id) ON DELETE CASCADE,
+    offer VARCHAR(250),
+    price INTEGER,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );''')
 
 

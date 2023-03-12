@@ -1,61 +1,76 @@
-class TextFastMode:
-    NEED_FIRST_ADDRESS = "Давайте построим маршрут по городу {}.\n" \
-                         "Выберите <b>МЕСТО ПОСАДКИM</b> из предложженных или напишите новый адрес\n\n" \
-                         "Откуда: \n" \
-                         "Куда: \n"
 
-    NEED_SECOND_ADDRESS = "Давайте построим маршрут по городу {}.\n" \
-                          "Выберите <b>МЕСТО ПОСАДКИM</b> из предложженных или напишите новый адрес\n\n" \
-                          "Откуда: {}\n" \
-                          "Куда: \n"
+def make_text_for_create_route(address_list: list, city: str) -> str:
+    if len(address_list) == 0:
+        return f"Давай вместе построим маршрут по городу {city}. \n" \
+               f"Чтобы начать, выберите <b>МЕСТО ПОСАДКИ</b> из списка " \
+               f"предложенных адресов или напишите новый адрес вручную. " \
+               f"Если вам удобнее, можете прислать мне геолокацию нужного " \
+               f"места через Telegram, и я найду его для вас.\n\n"\
+               "Откуда: \n" \
+               "Куда: \n"
 
-    WAIT_THIRD_ADDRESS = "Маршрут для поиска поездки по городу {}\n\n" \
-                         "Откуда: {}\n" \
-                         "Куда: {}\n\n" \
-                         'Можете добавить ещё адреса в поездку или нажмите "Искать цены"'
+    if len(address_list) == 1:
+        return "Отлично! Теперь введи <b>МЕСТО НАЗНАЧЕНИЯ</b>, " \
+               "куда ты хочешь поехать.\n\n"\
+               f"Откуда: <b><b>{address_list[0]}</b></b>\n" \
+               "Куда: \n"
 
-    WAIT_FOURTH_ADDRESS = "Маршрут для поиска поездки по городу {}\n\n" \
-                          "Откуда: {}\n" \
-                          "Остановка: {}\n" \
-                          "Куда: {}\n\n" \
-                          'Можете добавить ещё адреса в поездку или нажмите "Искать цены"'
+    if len(address_list) == 2:
+        return f"Отлично, мы готовы начать поиск подходящей поездки по городу {city}! " \
+               f"Ниже указаны пункты маршрута:\n\n"\
+                f"Откуда: <b>{address_list[0]}</b>\n"\
+                f"Куда: <b>{address_list[1]}</b>\n\n"\
+                "Если вам нужно указать еще какие-то адреса в маршруте, то введите их сейчас. "\
+                "Если же вы готовы продолжить, то нажмите кнопку 'Искать цены', и я начну поиск цен."
 
-    SELECT_ALL_ADDRESS = "Маршрут для поиска поездки по городу {}\n\n" \
-                         "Откуда: {}\n" \
-                         "Остановка 1: {}\n" \
-                         "Остановка 2: {}\n" \
-                         "Куда: {}\n\n" \
-                         'Маршрут может содержать до 4 адресов. Нажмите кнопку "Искать"'
+    if len(address_list) == 3:
+        return f"Отлично, мы готовы начать поиск подходящей поездки по городу {city}! " \
+               f"Ниже указаны пункты маршрута:\n\n"\
+                f"Откуда: <b>{address_list[0]}</b>\n"\
+                f"Остановка 1: <b>{address_list[1]}</b>\n"\
+                f"Куда: <b>{address_list[2]}</b>\n\n"\
+                "Если вам нужно указать еще какие-то адреса в маршруте, то введите их сейчас. "\
+                "Если же вы готовы продолжить, то нажмите кнопку 'Искать цены', и я начну поиск цен."
+
+    if len(address_list) == 4:
+        return f"Отлично, мы готовы начать поиск подходящей поездки по городу {city}! " \
+               f"Ниже указаны пункты маршрута:\n\n"\
+                 f"Откуда: <b>{address_list[0]}</b>\n" \
+                 f"Остановка 1: <b>{address_list[1]}</b>\n" \
+                 f"Остановка 2: <b>{address_list[2]}</b>\n" \
+                 f"Куда: <b>{address_list[3]}</b>\n\n" \
+                 'Маршрут может содержать до 4 адресов. Теперь нажми кнопку "Искать цены"'
 
 
-def make_text_for_running_fast_mode(data: dict) -> str:
-    addresses_list = data.get('addresses_list_yandex')
-    addresses_list = list(filter(lambda x: x != '', addresses_list))
-    city = data.get('city')
-    if len(addresses_list) == 2:
-        return f"Маршрут для поиска поездки по городу {city}\n\n" \
-               f"Откуда: {addresses_list[0]}\n" \
-               f"Куда: {addresses_list[1]}\n" \
-               f"(Адреса взяты из яндекс)\n"
-    elif len(addresses_list) == 3:
-        return f"Маршрут для поиска поездки по городу {city}\n\n" \
-               f"Откуда: {addresses_list[0]}\n" \
-               f"Остановка: {addresses_list[1]}\n" \
-               f"Куда: {addresses_list[2]}\n" \
-               f"(Адреса взяты из яндекс)\n"
-    elif len(addresses_list) == 4:
-        return f"Маршрут для поиска поездки по городу {city}\n\n" \
-               f"Откуда: {addresses_list[0]}\n" \
-               f"Остановка 1: {addresses_list[1]}\n" \
-               f"Остановка 2: {addresses_list[2]}\n" \
-               f"Куда: {addresses_list[3]}\n" \
-               f"(Адреса взяты из яндекс)\n"
+def make_text_for_running_fast_mode(address_list: list, price_history, best_price) -> str:
+
+    top = f"Каждую минуту я проверяю для тебя цены по маршруту:\n"
+
+    if len(address_list) == 2:
+        route = f"Откуда: <b>{address_list[0]}</b>\n"\
+                f"Куда: <b>{address_list[1]}</b>\n\n"\
+
+    if len(address_list) == 3:
+        route = f"Откуда: <b>{address_list[0]}</b>\n"\
+                f"Остановка 1: <b>{address_list[1]}</b>\n"\
+                f"Куда: <b>{address_list[2]}</b>\n\n"
+
+    if len(address_list) == 4:
+        route = f"Откуда: <b>{address_list[0]}</b>\n" \
+                 f"Остановка 1: <b>{address_list[1]}</b>\n" \
+                 f"Остановка 2: <b>{address_list[2]}</b>\n" \
+                 f"Куда: <b>{address_list[3]}</b>\n\n"
+
+    info = "Я сохраняю возможность оформить заказ на любую цену, которая была полученая за посдедние 10 минут. " \
+               'То есть если ты видишь здесь "лучшую цену" 200 рублей, а в "Яндекс такси" стоимость уже 300 рублей по тому же маршруту, ' \
+               'то я всё ещё могу оформить для тебя такси за 200 рублей! Для этого нажми "Заказать"\n\n'
+
+    return top + route + info + price_history + best_price
 
 
 def create_price_time_string(price_list: list, time_list: list):
     """Функция создаёт строку из прошлых цен"""
     price_time_string = ''
-
     if len(price_list) > 10:
         price_list = price_list[-10:]
         time_list = time_list[-10:]
@@ -72,5 +87,5 @@ def create_price_time_string(price_list: list, time_list: list):
                 emj = '↔️'
         except:
             pass
-        price_time_string += f'В {time_list[i]} цена {price_list[i]} ' + emj + '\n'
+        price_time_string += f'В {time_list[i]} цена {price_list[i]}₽ ' + emj + '\n'
     return price_time_string

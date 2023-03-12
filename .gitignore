@@ -131,3 +131,6 @@ dmypy.json
 
 # parsing
 parcsing/driver_and_files
+
+# database
+data_base/cheap_taxi_db.db

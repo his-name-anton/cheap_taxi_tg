@@ -7,8 +7,10 @@ from aiogram.fsm.context import FSMContext
 # -------------------------------------------
 from create_route.create_route import create_new_trip
 from handlers.states import MainStates
-from keyboards.keyboards import make_inline_menu_board
-from keyboards.buttons import KeyboardButtons
+from keyboards.keyboards import make_inline_menu_board, make_inline_menu_board_by_2_items, make_inline_simple_board
+from keyboards.buttons import KeyboardButtons, SettingsButtons
+from create_route.create_route import FAST_MODE_DICT
+from data_base.data_base import db
 
 
 logging.basicConfig(level=logging.INFO)
@@ -26,17 +28,27 @@ async def back_to_main_menu(cb: CallbackQuery, state: FSMContext):
 
 # main menu
 async def find_price_menu(cb: CallbackQuery, state: FSMContext):
-    await cb.message.edit_text('Выберите как будет строить маршрут',
-                               reply_markup=make_inline_menu_board(KeyboardButtons.FIND_PRICE_MENU))
+    if FAST_MODE_DICT.get(cb.from_user.id) and FAST_MODE_DICT.get(cb.from_user.id).get('is_fast_mode'):
+        await cb.message.edit_text('Вы уже ищете цены. \n'
+                                   'Вы можете отменить предыдущий поиск и начать новый',
+                                   reply_markup=make_inline_menu_board_by_2_items({
+                                        'back_to_main_menu': '⬅ Назад в меню',
+                                        'cancel_fast_mode': '⛔Отменить'
+                                   })
+                                   )
+    else:
+        await cb.message.edit_text('Выберите как будет строить маршрут',
+                                   reply_markup=make_inline_menu_board(KeyboardButtons.FIND_PRICE_MENU))
 
 
 async def settings_menu(cb: CallbackQuery, state: FSMContext):
     await cb.message.edit_text('Настройки:',
-                               reply_markup=make_inline_menu_board(KeyboardButtons.SETTING_MENU))
+                               reply_markup=make_inline_menu_board(KeyboardButtons.SETTING_MENU,
+                                                                   long_f=True))
 
 
-async def faq_menu(cb: CallbackQuery, state: FSMContext):
-    await cb.message.edit_text('Вопрос-ответ')
+async def stats_menu(cb: CallbackQuery, state: FSMContext):
+    await cb.message.edit_text('Статистика по прошлым поискам')
 
 
 async def donate_menu(cb: CallbackQuery, state: FSMContext):
@@ -58,19 +70,35 @@ async def change_city(cb: CallbackQuery, state: FSMContext):
     await cb.message.edit_text('Текущий город ____ \nИзмените город')
 
 
-async def change_phone(cb: CallbackQuery, state: FSMContext):
-    await cb.message.edit_text('Текущий номер _____ \nИзмените номер')
-
-
 async def notif_threshold_price(cb: CallbackQuery, state: FSMContext):
-    await cb.message.edit_text('Текущий порог изменения цены для увелрмления __\nИзмените порог цены')
+    price_alert_threshold = db.get_setting_value(cb.from_user.id, 'price_alert_threshold')
+    await cb.message.edit_text(f'Текущий порог изменения цены для отправки уведомления: {price_alert_threshold} рублей\n\n'
+                               f'Выберите новый порог изменения цены',
+                               reply_markup=make_inline_simple_board(
+                                   SettingsButtons.price_alert
+                               ))
 
 
-# faq_menu
+@router.callback_query(lambda c: 'change_price_threshold' in c.data)
+async def change_notif_threshold_price(cb: CallbackQuery, state: FSMContext):
+    value = SettingsButtons.price_alert.get(cb.data)
+    value = int(value.replace('рублей', '').strip())
+    db.update_value(f"""
+        UPDATE user_settings
+        SET value = {value}
+        WHERE chat_id = {cb.from_user.id}
+        and setting_name = 'price_alert_threshold'
+    """)
+    await cb.message.edit_text(f'Изменил порог изменения цены для отправки уведомления на {value} рублей',
+                               reply_markup=make_inline_simple_board({
+                                        'back_to_main_menu': '⬅ Назад в меню',
+                                   }))
 
-async def faq_menu(cb: CallbackQuery, state: FSMContext):
+
+# stats_menu
+async def stats_menu(cb: CallbackQuery, state: FSMContext):
     await cb.message.edit_text('Кнопка в разработке',
-                               reply_markup=make_inline_menu_board(KeyboardButtons.FAQ_MENU))
+                               reply_markup=make_inline_menu_board(KeyboardButtons.STATS_MENU))
 
 
 # donate
