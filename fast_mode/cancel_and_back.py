@@ -21,7 +21,6 @@ router = Router()
 async def cancel_fast_mode(cb: types.CallbackQuery, state: FSMContext):
     await state.set_state(MainStates.main_menu)
     await state.clear()
-    FAST_MODE_DICT[cb.from_user.id]['is_fast_mode'] = False
     msg_session: types.Message = FAST_MODE_DICT[cb.from_user.id]['msg_session']
     db.set_result_session_fast_mode(FAST_MODE_DICT[cb.from_user.id]['session_id'],
                                     'cancel_fast_mode')
@@ -38,6 +37,7 @@ async def cancel_fast_mode(cb: types.CallbackQuery, state: FSMContext):
     except TelegramBadRequest:
         pass
 
+    FAST_MODE_DICT[cb.from_user.id] = {}
     await cb.answer()
 
 
@@ -53,8 +53,8 @@ async def cancellation_order(cb: types.CallbackQuery, state: FSMContext):
         await state.set_state(MainStates.main_menu)
     else:
         await cb.message.answer('Ошибка при отмене заказа')
+    FAST_MODE_DICT[cb.from_user.id] = {}
     await cb.answer()
-
 
 
 @router.callback_query(Text(['cancel_create_trip']))

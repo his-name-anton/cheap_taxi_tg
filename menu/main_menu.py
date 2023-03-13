@@ -23,6 +23,7 @@ async def main_menu(msg: Message):
 
 
 async def back_to_main_menu(cb: CallbackQuery, state: FSMContext):
+    await state.clear()
     await state.set_state(MainStates.main_menu)
     await cb.message.edit_text('Меню', reply_markup=make_inline_menu_board(KeyboardButtons.MAIN_MENU))
 

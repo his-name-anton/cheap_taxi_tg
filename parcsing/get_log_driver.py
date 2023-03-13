@@ -137,15 +137,15 @@ def create_driver():
     return driver, original_window
 
 
-# driver, original_window = create_driver()
-#
-#
-# for i in range(2):
-#     data_headers = get_new_headers_data(driver)
-# pprint(data_headers)
+driver, original_window = create_driver()
 
 
-# БЕЗ ЗАПУСКА ДРАЙВЕРА
-driver = None
-data_headers = {}
-original_window = None
+for i in range(2):
+    data_headers = get_new_headers_data(driver)
+pprint(data_headers)
+
+
+# # БЕЗ ЗАПУСКА ДРАЙВЕРА
+# driver = None
+# data_headers = {}
+# original_window = None

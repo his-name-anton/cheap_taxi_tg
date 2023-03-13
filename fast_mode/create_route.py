@@ -68,6 +68,7 @@ async def run_fast_mode(cb: types.CallbackQuery, state: FSMContext):
     FAST_MODE_DICT[cb.from_user.id] = {
         'iter': 1,
         'is_fast_mode': True,
+        cb.message.message_id: True,
         'message_id_start': cb.message.message_id,
         'city': user_data.get('city'),
         'first_name': user_data.get('first_name'),
@@ -83,9 +84,9 @@ async def run_fast_mode(cb: types.CallbackQuery, state: FSMContext):
         'order_successfully_created': None
     }
 
-    while FAST_MODE_DICT.get(cb.from_user.id).get('is_fast_mode'):
+    while FAST_MODE_DICT.get(cb.from_user.id) and FAST_MODE_DICT.get(cb.from_user.id).get(cb.message.message_id):
 
-        pprint(FAST_MODE_DICT[cb.from_user.id])
+        pprint(FAST_MODE_DICT)
         offer, price = await get_price_yandex(FAST_MODE_DICT[cb.from_user.id].get('addresses_coords'))
         db.insert_row('offers_taxi',
                       (cb.from_user.id,
@@ -103,7 +104,7 @@ async def run_fast_mode(cb: types.CallbackQuery, state: FSMContext):
 
         price_time_string = create_price_time_string(price_list, time_list)
 
-        if not FAST_MODE_DICT.get(cb.from_user.id).get('is_fast_mode'):
+        if not FAST_MODE_DICT.get(cb.from_user.id) and FAST_MODE_DICT.get(cb.from_user.id).get(cb.message.message_id):
             break
 
         string_best_price = f"\nЛучшая цена на момент обновления: {FAST_MODE_DICT[cb.from_user.id].get('best_price')}₽ " \
@@ -139,7 +140,7 @@ async def create_order_taxi(cb: types.CallbackQuery, state: FSMContext):
     await state.set_state(MainStates.main_menu)
 
     # данные
-    FAST_MODE_DICT[cb.from_user.id]['is_fast_mode'] = False
+    FAST_MODE_DICT[cb.from_user.id][cb.message.message_id] = False
     best_price = FAST_MODE_DICT.get(cb.from_user.id).get('best_price')
     best_offer = FAST_MODE_DICT.get(cb.from_user.id).get('best_offer')
     addresses_coords = FAST_MODE_DICT.get(cb.from_user.id).get('addresses_coords')
@@ -193,7 +194,7 @@ async def create_order_taxi(cb: types.CallbackQuery, state: FSMContext):
 
         # таймер для клавы на отмену заказа
         FAST_MODE_DICT[cb.from_user.id]['sec_for_cancel_order'] = 30
-        while FAST_MODE_DICT[cb.from_user.id]['sec_for_cancel_order'] > 0:
+        while FAST_MODE_DICT.get(cb.from_user.id) and FAST_MODE_DICT[cb.from_user.id]['sec_for_cancel_order'] > 0:
             await msg.edit_reply_markup(reply_markup=make_inline_menu_board_by_2_items({
                 'cancellation_order': f"❌ Отменить вызов такси {FAST_MODE_DICT[cb.from_user.id]['sec_for_cancel_order']}"
             }))
