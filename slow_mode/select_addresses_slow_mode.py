@@ -3,20 +3,21 @@ from aiogram.filters import and_f, Text, or_f
 from aiogram.fsm.context import FSMContext
 
 from data_base.data_base import db
-from handlers.states import MainStates
-from keyboards.keyboards import make_address_keyboard_menu, make_inline_menu_board_by_2_items
+from menu.states import MainStates
+from keyboards.keyboards import make_inline_menu_board_by_2_items, \
+    make_recent_address_kb_for_sm
 from parcsing.api_yandex import get_address_data
-from text.fast_mode_text import make_text_for_create_route
+from text.slow_mode_text import make_text_for_create_route_slow_mode
 
 router = Router()
 
 
 @router.message(and_f(F.content_type.in_({'location', 'venue', 'text'})),
                 or_f(
-                    MainStates.first_address,
-                    MainStates.second_address,
-                    MainStates.third_address,
-                    MainStates.fourth_address
+                    MainStates.first_address_sm,
+                    MainStates.second_address_sm,
+                    MainStates.third_address_sm,
+                    MainStates.fourth_address_sm
                 ))
 async def get_new_address(msg: types.Message, state: FSMContext):
     user_data = await state.get_data()
@@ -61,7 +62,7 @@ async def get_new_address(msg: types.Message, state: FSMContext):
                             addresses_list=addresses_list)
 
     await main_message.edit_text(
-        make_text_for_create_route(addresses_list, city) + f"\n\nОпределил адрес как: <b>{text_address}</b>\nВерно?",
+        make_text_for_create_route_slow_mode(addresses_list, city) + f"\n\nОпределил адрес как: <b>{text_address}</b>\nВерно?",
         reply_markup=make_inline_menu_board_by_2_items({
             'incorrect_new_address': '👎 Нет',
             'correct_new_address': '👍 Да'
@@ -73,8 +74,14 @@ async def get_new_address(msg: types.Message, state: FSMContext):
     await msg.delete()
 
 
-@router.callback_query(or_f(Text(['correct_new_address']),
-                            lambda c: 'recent_address' in c.data))
+@router.callback_query(and_f(or_f(Text(['correct_new_address']),
+                                  lambda c: 'recent_address' in c.data),
+                             or_f(MainStates.first_address_sm,
+                                  MainStates.second_address_sm,
+                                  MainStates.third_address_sm,
+                                  MainStates.fourth_address_sm)
+                             )
+                       )
 async def correct_new_address(cb: types.CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
     addresses_list: list = user_data.get('addresses_list')
@@ -95,11 +102,11 @@ async def correct_new_address(cb: types.CallbackQuery, state: FSMContext):
         addresses_coords.append(address_values[0])
         addresses_list.append(address_values[1])
 
-    can_order = True if len(addresses_list) > 1 else False
+    can_next = True if len(addresses_list) > 1 else False
     await main_message.edit_text(
-        make_text_for_create_route(addresses_list, city),
-        reply_markup=make_address_keyboard_menu(recent_addresses,
-                                                can_order=can_order),
+        make_text_for_create_route_slow_mode(addresses_list, city),
+        reply_markup=make_recent_address_kb_for_sm(recent_addresses,
+                                                   can_next=can_next),
         parse_mode='html'
     )
 
@@ -110,9 +117,9 @@ async def correct_new_address(cb: types.CallbackQuery, state: FSMContext):
         pass
 
     state_now = await state.get_state()
-    index_new_state = MainStates.state_list.index(state_now) + 1
+    index_new_state = MainStates.state_sm_select_address.index(state_now) + 1
     try:
-        await state.set_state(MainStates.state_list[index_new_state])
+        await state.set_state(MainStates.state_sm_select_address[index_new_state])
     except:
         pass
     await cb.answer()
@@ -132,11 +139,11 @@ async def incorrect_new_address(cb: types.CallbackQuery, state: FSMContext):
     except Exception:
         pass
 
-    can_order = True if len(addresses_list) > 1 else False
+    can_next = True if len(addresses_list) > 1 else False
     await main_message.edit_text(
-        make_text_for_create_route(addresses_list, city),
-        reply_markup=make_address_keyboard_menu(recent_addresses,
-                                                can_order=can_order),
+        make_text_for_create_route_slow_mode(addresses_list, city),
+        reply_markup=make_recent_address_kb_for_sm(recent_addresses,
+                                                   can_next=can_next),
         parse_mode='html'
     )
     await cb.answer()

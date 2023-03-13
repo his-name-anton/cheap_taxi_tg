@@ -8,8 +8,8 @@ from aiogram.fsm.context import FSMContext
 
 from data_base.data_base import db
 # -------------------------------------------
-from handlers.states import MainStates
-from keyboards.keyboards import make_address_keyboard_menu, make_fast_mode_running_board, \
+from menu.states import MainStates
+from keyboards.keyboards import make_recent_address_kb_for_fm, make_fast_mode_running_board, \
     make_inline_menu_board_by_2_items
 from parcsing.api_yandex import get_price_yandex, get_orderid, create_order_yandex, taxi_on_the_way
 from text.fast_mode_text import create_price_time_string, make_text_for_create_route, make_text_for_running_fast_mode
@@ -27,7 +27,7 @@ async def create_new_trip(cb: types.CallbackQuery, state: FSMContext):
     recent_addresses = db.get_recent_addresses(cb.from_user.id)
     addresses_list = []
     addresses_coords = []
-    await state.set_state(MainStates.first_address)
+    await state.set_state(MainStates.first_address_fm)
     await state.update_data(main_message=cb.message,
                             recent_addresses=recent_addresses,
                             city=city,
@@ -38,7 +38,7 @@ async def create_new_trip(cb: types.CallbackQuery, state: FSMContext):
 
     await cb.message.edit_text(
         make_text_for_create_route(addresses_list, city),
-        reply_markup=make_address_keyboard_menu(recent_addresses),
+        reply_markup=make_recent_address_kb_for_fm(recent_addresses),
         parse_mode='html'
     )
     await cb.answer()

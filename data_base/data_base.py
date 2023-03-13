@@ -17,7 +17,9 @@ DB_COLUMNS = {
                        'lon'],
     'csrf_tokens': ['token'],
     'session_fast_mode': ['chat_id', 'address_1', 'address_2', 'address_3', 'address_4'],
-    'offers_taxi': ['chat_id', 'session_id', 'offer', 'price']
+    'session_slow_mode': ['chat_id', 'time_start', 'time_end', 'address_1', 'address_2', 'address_3', 'address_4'],
+    'offers_taxi': ['chat_id', 'session_id', 'offer', 'price'],
+    'offers_taxi_slow_mode': ['chat_id', 'session_id', 'offer', 'price']
 }
 
 
@@ -97,9 +99,9 @@ class DataBase:
             row = self.cursor.fetchall()
             return row[0][0] if row else None
 
-    def get_last_session_id(self, chat_id):
+    def get_last_session_id(self, chat_id, table='session_fast_mode'):
         with self.connection:
-            self.cursor.execute(f"""SELECT max(id) from session_fast_mode 
+            self.cursor.execute(f"""SELECT max(id) from {table} 
                                     WHERE chat_id = {chat_id} 
                                     """)
             row = self.cursor.fetchall()

@@ -5,13 +5,13 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 # -------------------------------------------
-from create_route.create_route import create_new_trip
-from handlers.states import MainStates
+from fast_mode.create_route import create_new_trip
+from menu.states import MainStates
 from keyboards.keyboards import make_inline_menu_board, make_inline_menu_board_by_2_items, make_inline_simple_board
 from keyboards.buttons import KeyboardButtons, SettingsButtons
-from create_route.create_route import FAST_MODE_DICT
+from fast_mode.create_route import FAST_MODE_DICT
 from data_base.data_base import db
-
+from slow_mode.create_route_slow_mode import create_slow_mode
 
 logging.basicConfig(level=logging.INFO)
 router = Router()
@@ -23,6 +23,7 @@ async def main_menu(msg: Message):
 
 
 async def back_to_main_menu(cb: CallbackQuery, state: FSMContext):
+    await state.set_state(MainStates.main_menu)
     await cb.message.edit_text('Меню', reply_markup=make_inline_menu_board(KeyboardButtons.MAIN_MENU))
 
 
@@ -39,6 +40,16 @@ async def find_price_menu(cb: CallbackQuery, state: FSMContext):
     else:
         await cb.message.edit_text('Выберите как будет строить маршрут',
                                    reply_markup=make_inline_menu_board(KeyboardButtons.FIND_PRICE_MENU))
+
+
+async def slow_mode_menu(cb: CallbackQuery, state: FSMContext):
+    await cb.message.edit_text('У вас 0 фоновых режимов. '
+                               'Вы можете создать до 2-ух маршрутов и указать для них час поиска цен.'
+                               'Например вы можете указать час когда вы едете на работу, '
+                               'и указать маршрут от дома до работы. '
+                               'Тогда в этот час, в любой момент для вас будет доступна '
+                               'возмонжость заказать лучшею цены за посдедние 10 минут',
+                               reply_markup=make_inline_menu_board(KeyboardButtons.SLOW_MODE_MENU))
 
 
 async def settings_menu(cb: CallbackQuery, state: FSMContext):
@@ -63,6 +74,12 @@ async def new_trip(cb: CallbackQuery, state: FSMContext):
 
 async def last_trip(cb: CallbackQuery, state: FSMContext):
     await cb.message.edit_text('Выберите из прошлых поездок')
+
+
+# slow mode
+async def slow_mode(cb: CallbackQuery, state: FSMContext):
+    await state.set_state(MainStates.create_slow_mode)
+    await create_slow_mode(cb, state)
 
 
 # settings_menu

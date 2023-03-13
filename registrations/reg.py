@@ -3,9 +3,9 @@ from aiogram.filters import Command, Text, and_f
 from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile, ReplyKeyboardRemove
 
-from handlers.main_menu import main_menu
+from menu.main_menu import main_menu
 from data_base.data_base import db
-from handlers.states import MainStates
+from menu.states import MainStates
 from geo_data.geo_dadata import get_info_address, get_address_by_coord
 from keyboards.keyboards import make_inline_menu_board_by_2_items, share_phone_keyboard, share_geo_keyboard
 from text.registrations_text import TextRegistrations

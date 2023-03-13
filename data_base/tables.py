@@ -68,6 +68,31 @@ conn.execute('''CREATE TABLE IF NOT EXISTS offers_taxi (
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );''')
 
+conn.execute('''CREATE TABLE IF NOT EXISTS session_slow_mode (
+    id INTEGER PRIMARY KEY,
+    chat_id INTEGER REFERENCES users(chat_id) ON DELETE CASCADE,
+    enable INTEGER DEFAULT 1,
+    time_start VARCHAR(10),
+    time_end VARCHAR(10),
+    address_1 varchar(100),
+    address_2 varchar(100),
+    address_3 varchar(100),
+    address_4 varchar(100),
+    result varchar(50),
+    offer_used VARCHAR(250) REFERENCES offers_taxi(offer) ON DELETE CASCADE,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    closed TIMESTAMP
+);''')
+
+conn.execute('''CREATE TABLE IF NOT EXISTS offers_taxi_slow_mode (
+    id INTEGER PRIMARY KEY,
+    chat_id INTEGER REFERENCES users(chat_id) ON DELETE CASCADE,
+    session_id INTEGER REFERENCES session_fast_mode(id) ON DELETE CASCADE,
+    offer VARCHAR(250),
+    price INTEGER,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);''')
+
 
 conn.commit()
 conn.close()

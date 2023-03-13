@@ -4,6 +4,7 @@ class KeyboardButtons:
     }
     MAIN_MENU = {
         'find_price_menu': ('Найти цены', 'find_price_menu'),
+        'slow_mode_menu': ('Фоновая проверка цен', 'slow_mode_menu'),
         'settings_menu': ('Настройки', 'settings_menu'),
         'stats_menu': ('Статистика', 'stats_menu'),
         'donate_menu': ('Донат', 'donate_menu'),
@@ -13,6 +14,11 @@ class KeyboardButtons:
         'new_trip': ('Новый маршрут', 'new_trip'),
         'last_trips': ('Выбрат из прошлых', 'last_trips'),
         'back_to_main_menu': ('⬅ Назад в меню', 'back_to_main_menu')
+    }
+
+    SLOW_MODE_MENU = {
+        'back_to_main_menu': ('⬅ Назад в меню', 'back_to_main_menu'),
+        'slow_mode': ('📌Создать маршрут', 'slow_mode')
     }
 
     SETTING_MENU = {

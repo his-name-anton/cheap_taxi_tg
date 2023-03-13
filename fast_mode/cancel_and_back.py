@@ -6,8 +6,8 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 
-from create_route.create_route import FAST_MODE_DICT
-from handlers.states import MainStates
+from fast_mode.create_route import FAST_MODE_DICT
+from menu.states import MainStates
 from keyboards.buttons import KeyboardButtons
 from keyboards.keyboards import make_inline_menu_board
 from parcsing.api_yandex import canceled_order_yandex

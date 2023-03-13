@@ -5,8 +5,9 @@ from dotenv import load_dotenv, find_dotenv
 
 from aiogram import Bot, Dispatcher
 
-from handlers import main_menu
-from create_route import select_addresses, cancel_and_back, create_route
+from menu import main_menu
+from fast_mode import select_addresses, cancel_and_back, create_route
+from slow_mode import select_addresses_slow_mode, create_route_slow_mode
 from registrations import reg
 
 
@@ -28,9 +29,13 @@ dp.include_router(main_menu.router)
 # # fast mode
 dp.include_router(cancel_and_back.router)
 dp.include_router(create_route.router)
-
-# # create route
 dp.include_router(select_addresses.router)
+
+# slow mode
+dp.include_router(create_route_slow_mode.router)
+dp.include_router(select_addresses_slow_mode.router)
+
+
 
 
 if __name__ == '__main__':
