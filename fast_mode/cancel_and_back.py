@@ -52,7 +52,7 @@ async def cancellation_order(cb: types.CallbackQuery, state: FSMContext):
                                         FAST_MODE_DICT[cb.from_user.id]['best_offer'])
         await state.set_state(MainStates.main_menu)
     else:
-        await cb.message.answer('Ошибка при отмене заказа')
+        await cb.message.answer('Ошибка при отмене заказа, отмените заказ в вашем приложение яндекс такси')
     FAST_MODE_DICT[cb.from_user.id] = {}
     await cb.answer()
 

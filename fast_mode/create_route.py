@@ -86,7 +86,6 @@ async def run_fast_mode(cb: types.CallbackQuery, state: FSMContext):
 
     while FAST_MODE_DICT.get(cb.from_user.id) and FAST_MODE_DICT.get(cb.from_user.id).get(cb.message.message_id):
 
-        pprint(FAST_MODE_DICT)
         offer, price = await get_price_yandex(FAST_MODE_DICT[cb.from_user.id].get('addresses_coords'))
         db.insert_row('offers_taxi',
                       (cb.from_user.id,
@@ -148,6 +147,7 @@ async def create_order_taxi(cb: types.CallbackQuery, state: FSMContext):
     name_person = FAST_MODE_DICT.get(cb.from_user.id).get('first_name')
     phone_person = FAST_MODE_DICT.get(cb.from_user.id).get('phone')
     payment_type = 'card' if cb.from_user.id == 1069177650 else 'cash'
+    payment_type = 'cash'
 
     # удаляем клаву. чтобы не кликал больше
     await cb.message.edit_reply_markup(reply_markup=None)
