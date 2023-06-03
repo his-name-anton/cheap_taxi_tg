@@ -71,7 +71,7 @@ def make_fast_mode_running_board(best_price: int = None,
         end = route_yandex[-1]
         url = f"https://3.redirect.appmetrica.yandex.com/route?start-lat={start[1]}&start-lon={start[0]}&end-lat={end[1]}&end-lon={end[0]}&ref=cab_hound&appmetrica_tracking_id=1178268795219780156"
         board.row(InlineKeyboardButton(text=f'🚕Заказать в Яндекс {price_now}₽', url=url))
-    if best_price is not None and (price_now - best_price > 5):
+    if best_price is not None and (price_now - best_price >= 0):
         board.row(InlineKeyboardButton(text=f'💰Заказать лучшую цену {best_price}₽', callback_data='create_order_taxi'))
     return board.as_markup()
 

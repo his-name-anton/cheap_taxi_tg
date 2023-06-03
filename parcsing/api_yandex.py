@@ -27,6 +27,7 @@ def handle_csrf_token(func):
         response = await func(*args, **kwargs)
         cant_none = kwargs.get('cant_none')
         if not response and not cant_none:
+            print(f'error api responce: \n{response}')
             global headers
             new_token = get_new_token(driver)
             headers['x-csrf-token'] = new_token
@@ -121,8 +122,8 @@ async def get_orderid(offer: str,
             "coupon": ""
         },
         "dont_sms": False,
-        "extra_contact_phone": phone_person,
-        "extra_passenger_name": name_person,
+        # "extra_contact_phone": phone_person,
+        # "extra_passenger_name": name_person,
         "driverclientchat_enabled": True
     }
 
