@@ -146,7 +146,8 @@ async def create_order_taxi(cb: types.CallbackQuery, state: FSMContext):
     city = FAST_MODE_DICT.get(cb.from_user.id).get('city')
     name_person = FAST_MODE_DICT.get(cb.from_user.id).get('first_name')
     phone_person = FAST_MODE_DICT.get(cb.from_user.id).get('phone')
-    payment_type = 'card' if cb.from_user.id == 1069177650 else 'cash'
+    # payment_type = 'card' if cb.from_user.id == 1069177650 else 'cash'
+    payment_type = 'cash'
 
     # удаляем клаву. чтобы не кликал больше
     await cb.message.edit_reply_markup(reply_markup=None)

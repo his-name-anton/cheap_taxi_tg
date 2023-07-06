@@ -154,7 +154,6 @@ async def create_order_yandex(orderid):
                 return False
             response_json = await response.json()
             pprint(response_json)
-
             return True
 
 
