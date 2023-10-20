@@ -15,7 +15,7 @@ chrome_options.set_capability(
 # chrome_options.add_argument(f"--proxy-server='direct://'")  # отключает прокси-сервер
 chrome_options.add_argument(
     f"--proxy-bypass-list=*")  # настраивает список сайтов, для которых не нужно использовать прокси-сервер
-chrome_options.add_argument(f"--headless")
+# chrome_options.add_argument(f"--headless")
 chrome_options.add_argument(f"--disable-gpu")  # отключает использование GPU для рендеринга страницы.
 chrome_options.add_argument('--blink-settings=imagesEnabled=false')
 chrome_options.add_argument('--disable-javascript')
@@ -26,12 +26,10 @@ chrome_options.add_argument(
 chrome_options.add_argument(f"--no-sandbox")  # запускает браузер без использования песочницы (sandbox)
 
 
-
-
 def load_url_and_cookies(driver: webdriver.Chrome):
     """Функция загружает страницу и подставляет куки"""
 
-    cookie = '_ym_uid=1670490608167719583; yashr=1819935411674096423; gdpr=0; my=YwA=; font_loaded=YSv1; skid=1964573971677503570; yandexuid=8943791831670490607; yuidss=8943791831670490607; i=lkoaiiXTfJGECbJ8bzMY+bbFt+WVc6eLmYjRwQcgfyXVV6TW2L1ZJAS7Zxgo+CEkKSlXVwkcgVFzfAUBTanKXMvA3KY=; ymex=1681303309.oyu.5464549601678610412#1993970412.yrts.1678610412#1993970412.yrtsi.1678610412; uxs_uid=98d44320-c19c-11ed-9d8a-113b6a9be453; is_gdpr=0; is_gdpr_b=CJ6rGBDgrAEoAg==; yp=1990954416.multib.1#1694486733.szm.2:1800x1169:1800x987#1994585979.udn.cDrQkNC90YLQvtC9INCb0LDRgNC40L0%3D#1678797709.yu.5464549601678610412; L=YnZnBXVfRXkGflhBBF9nBAZJenUHaFYKD1ktL0xYJ10iDlUjSw==.1679225979.15286.331900.9b0b4907654db2fa64107a4d562696d2; yandex_login=akkayntnomer3; AMP_MKTG_332f8b000f=JTdCJTIycmVmZXJyZXIlMjIlM0ElMjJodHRwcyUzQSUyRiUyRnd3dy5nb29nbGUuY29tJTJGJTIyJTJDJTIycmVmZXJyaW5nX2RvbWFpbiUyMiUzQSUyMnd3dy5nb29nbGUuY29tJTIyJTdE; AMP_332f8b000f=JTdCJTIyb3B0T3V0JTIyJTNBZmFsc2UlMkMlMjJkZXZpY2VJZCUyMiUzQSUyMjkzNzJiODk4LWE2MzQtNGQyMC04MWVkLTVjYzEyMTFhZWU1MCUyMiUyQyUyMmxhc3RFdmVudFRpbWUlMjIlM0ExNjgxMjkzMjU0MjU1JTJDJTIyc2Vzc2lvbklkJTIyJTNBMTY4MTI5MzI1MDgxMyUyQyUyMnVzZXJJZCUyMiUzQSUyMnVuZGVmaW5lZCUyMiU3RA==; _ym_d=1687868880; instruction=1; _ym_isad=1; Session_id=3:1688639973.5.0.1678554937639:P9BnVw:24.1.2:1|323357137.-1.2.3:1678554937|1765907004.-1.2.2:165285.3:1678720222|3:10272379.288625.yxJePevFPkYDRd3gr249sOZpaVM; sessar=1.107.CiCKrOZWux2X4jFY5uCvO7QTOhP4vTXKWlySKzU-wPi7Pw.DRmyo290Y9KbZPo_g7-KQpJvLoFBOft0WmS4unr5cdw; sessionid2=3:1688639973.5.0.1678554937639:P9BnVw:24.1.2:1|323357137.-1.2.3:1678554937|1765907004.-1.2.2:165285.3:1678720222|3:10272379.288625.fakesign0000000000000000000; _yasc=dMMtIyGv7bITBGficPf+NeR8emy2fT5iZegffvitu6kb6plgpJTFEvhwhPAmnw==; yabs-sid=2270034391688641898; bh=EkAiTm90LkEvQnJhbmQiO3Y9IjgiLCAiQ2hyb21pdW0iO3Y9IjExNCIsICJHb29nbGUgQ2hyb21lIjt2PSIxMTQiGgUiYXJtIiIQIjExNC4wLjU3MzUuMTk4IioCPzA6ByJtYWNPUyJCCCIxMy40LjAiSgQiNjQiUlsiTm90LkEvQnJhbmQiO3Y9IjguMC4wLjAiLCJDaHJvbWl1bSI7dj0iMTE0LjAuNTczNS4xOTgiLCJHb29nbGUgQ2hyb21lIjt2PSIxMTQuMC41NzM1LjE5OCIiWgI/MA=='
+    cookie = 'yashr=4432544281697807044; i=OBzlwvyxXhkld1jK7UU0YKzLlezSZoDrpB6CVEjMw6aBORbN5sdiqSG40eerOtF9BDkzRlbhOxbGooMoC0l+JQZeLbc=; yandexuid=2683412461697807044; yuidss=2683412461697807044; ymex=2013167045.yrts.1697807045; gdpr=0; _ym_uid=1697807045389510066; _ym_d=1697807045; _ym_isad=1; _ym_visorc=b; spravka=dD0xNjk3ODA3MDUwO2k9ODcuMTAzLjIwOC42MztEPTkyREZCODk4QjJENTQ5NjcxMkNENEZDMjE2MzZEN0M2Njc5NzVFQTM1Mzk5MUQ4Q0ZBODBCMTk1RUY0RDRFODY5QUY2QTREQzQ1NThCNUJBRkNCOUYxQzE4NkVFRTNEMTEyRDRERjQ0RDMyREJFNzQ0MzMxRTg0M0I2MEIwMDQ0QUU2MzU5NTI4RDNBNDIwMkJCMzZGMjczOTJGMTc0NkYwMDM2O3U9MTY5NzgwNzA1MDgyNzUxODI3NjtoPWRmNGZkNWQ4YTQ1OTAyMGNhZDY4NzhjMWMxYjY5OTFi; _yasc=+PWoWHx0ZnXyh6XrapaTez3Oo87Q2K3SeaMGgFNCflIBuCEp7SVNcGDaHUFwZajWzz2tEbxL; Session_id=3:1697807069.5.0.1697807069144:P9BnVw:5b.1.2:1|1904945040.-1.0.3:1697807069|3:10277469.36869.qPmjSz6a2-GpWfe1wDMpZzU8YE4; sessar=1.1183.CiBEQH7LD9k6Dw6mzE2Nj2sS04g40iCopgB1Ex3H6CrfYA.eKEGw-hPxR_xEolmPXjS82BWy0qLNSk7DnWSKJdfUmI; sessionid2=3:1697807069.5.0.1697807069144:P9BnVw:5b.1.2:1|1904945040.-1.0.3:1697807069|3:10277469.36869.fakesign0000000000000000000; yp=2013167069.udn.cDrQkNC90YLQvtC9; L=c1lceEFcWgVOf1N5QnRGBElhcQtfVgYCGklYNA1lCCBBFj1efHs=.1697807069.15501.323060.23d913165e4e3cd838dc855f934a4371; yandex_login=nphne-livrh735; ys=udn.cDrQkNC90YLQvtC9#c_chck.3024575315; bh=Ej8iQ2hyb21pdW0iO3Y9IjExOCIsIkdvb2dsZSBDaHJvbWUiO3Y9IjExOCIsIk5vdD1BP0JyYW5kIjt2PSI5OSIaBSJhcm0iIg8iMTE4LjAuNTk5My44OCIqAj8wOgcibWFjT1MiQggiMTQuMC4wIkoEIjY0IlJaIkNocm9taXVtIjt2PSIxMTguMC41OTkzLjg4IiwiR29vZ2xlIENocm9tZSI7dj0iMTE4LjAuNTk5My44OCIsIk5vdD1BP0JyYW5kIjt2PSI5OS4wLjAuMCIi'
 
     for item in cookie.split('; '):
         name, value = item[:item.index('=')], item[item.index('=')+1:]
@@ -40,7 +38,7 @@ def load_url_and_cookies(driver: webdriver.Chrome):
                        'domain': '.yandex.ru'}
         driver.add_cookie(cookie_item)
     driver.refresh()
-    time.sleep(10)
+    time.sleep(5)
 
 
 def get_xtoken(driver: webdriver.Chrome):
@@ -165,3 +163,4 @@ driver, original_window = create_driver()
 
 for i in range(1):
     data_headers = get_new_headers_data(driver)
+    print(data_headers)
