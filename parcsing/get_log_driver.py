@@ -15,7 +15,7 @@ chrome_options.set_capability(
 # chrome_options.add_argument(f"--proxy-server='direct://'")  # отключает прокси-сервер
 chrome_options.add_argument(
     f"--proxy-bypass-list=*")  # настраивает список сайтов, для которых не нужно использовать прокси-сервер
-# chrome_options.add_argument(f"--headless")
+chrome_options.add_argument(f"--headless")
 chrome_options.add_argument(f"--disable-gpu")  # отключает использование GPU для рендеринга страницы.
 chrome_options.add_argument('--blink-settings=imagesEnabled=false')
 chrome_options.add_argument('--disable-javascript')
@@ -38,7 +38,7 @@ def load_url_and_cookies(driver: webdriver.Chrome):
                        'domain': '.yandex.ru'}
         driver.add_cookie(cookie_item)
     driver.refresh()
-    time.sleep(5)
+    time.sleep(10)
 
 
 def get_xtoken(driver: webdriver.Chrome):
