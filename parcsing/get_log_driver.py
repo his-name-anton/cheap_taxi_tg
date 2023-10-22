@@ -6,7 +6,7 @@ load_dotenv(find_dotenv())
 from selenium import webdriver
 
 URL = 'https://taxi.yandex.ru/?from=gofooter'
-PATH_DRIVER = 'parcsing/driver_and_files/chromedriver'
+PATH_DRIVER = 'parcsing/chromedriver'
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.set_capability(
